@@ -1,202 +1,210 @@
-# Guidance Title (required)
+## Introduction
+
+### Recording reuse
+
+The Industry Kit Program team reports on the impact that industry kits have for the AWS field and our customers. Don't forget to record reuse for every customer you show this to.
+
+In order to do so, click the "Record project reuse" button on this kit’s BuilderSpace page and enter the SFDC opportunity ID or paste the link to your SFDC opportunity.
+
+![reuse](./assets/reuse.png)
+
+## Support
+
+If you notice a defect, or need support with deployment or demonstrating the kit, create an Issue here: [link to issue board]
+
+## Prerequisities
+
+The only prerequisite for this solution is the proper access to run the CloudFormation template to set up S3 Auditor Lambda, SQS, SNS, IAM Permissions, OpenSearch Cluster, API Gateway and S3 permissions
+
+## Architecture
+
+![reuse](./assets/architecture.png)
+
+## Deployment
+
+### Step 1. CloudFormation 
+
+1. Create a deployment bucket where you'll put the assets (lambda function and layer zip files) needed for the CloudFormation Deployment
+2. Create an export bucket where inventory exports will go when requested by users. Users will need access this bucket to pick up their exports
+3. Go to Secrets Manager in the console
+	- Click on Store a new secret
+	- Under secret type select Other type of secret
+	- Below for key/value put in username for the key and any username value you’d like (e.g. admin)
+	- Click Add row and put in another key/value pair with password as the key and whatever password you’d like for the value (must be at least characters long with at least one capital, number, and symbol) 
+	- Click Next
+	- For the secret name enter s3auditor-opensearch-info (this is required)
+	- Click Next, click Next again, and then click Store
+4. Run the CloudFormation template provided here to set up all the necessary resources needed for this solution. This step can take approximately 15 minutes or more.
+5. Upon success, save the Role ARN, API Gateway endpoint, and OpenSearch Dashboard URL outputs
+
+### Step 2. OpenSearch Setup
+
+1. Go to the OpenSearch Dashboard URL and login with the credentials you saved in Secrets Manager
+2. In the top left, click on the menu icon and go to Security
+3. Select Roles and find the all_access and security_manager roles
+	- In both of these roles, go to Mapped Users tab
+	- Click on Manage Mapping
+	- Add the ARN for the Role from the CloudFormation Outputs tab into the Backend roles and click Map
+4. In the AWS Console, navigate to Lambda Functions and click on s3auditor-create-os-tables-run-once
+	- Go to lambda_function.py so you can see the code of the function
+	- Press Test above and create a new test event. The name can be anything you choose
+	- Press Test again to execute the function to create the necessary OpenSearch indexes
+
+### Step 3. OpenSearch Setup
+
+1. Unzip all the React code to a directory
+2. Add the API Gateway output from CloudFormation into the .env file for your React front-end
+3. Get the latest modules by running “npm install”
+4. Build the application via “npm run build”
+5. Download the React build code from the build directory and set it up as a static site in an S3 bucket or any hosting location of your choice.
+
+
+## Adding a Bucket for S3 Auditor to Track
+
+If this is the FIRST bucket in this AWS account to get set up for the S3 auditor continue below, otherwise skip to bucket-level details
+
+### Account Setup
+
+1. Go to Amazon EventBridge and go to Rules (make sure you're in the same region as your bucket)
+2. Create a new Rule:
+	- Give it any name and description
+	- Keep the default event bus unless you’d like to set up a more custom workflow
+	- For Rule Type, make sure “Rule with an event pattern” is selected for Rule Type
+	- Click Next
+	- For Event Source, leave it on “AWS events or EventBridge partner events”
+	- Under Event Pattern > AWS Service, select Simple Storage Service (S3)
+		- For Event Type, select Amazon S3 Event Notification
+		- Select the following events for S3 Event Notifications:
+			- Object Access Tier Changed
+			- Object Created
+			- Object Deleted
+			- Object Restore Completed
+			- Object Storage Class Changed
+			- Object Tags Added
+			- Object Tags Deleted
+		- You can leave Any bucket selected or specify your bucket name
+	- Click Next
+	- For the Target, select EventBridge event bus
+		- Select “Event bus in a different account or Region”
+		- Add the ARN of the Event bus from your auditor account
+		- You can either create a new role or use an existing one if you have one already
+	- Click Next
+	- Add any tags you’d like
+	- Click Next and review the setup
+	- Click Finish
+	- In the S3 Auditor account, go to the default EventBridge bus and make sure your account is added as a PutEvents source
+		- Go to the EventBridge event bus you specified
+		- Edit the PutEvents permissions to allow for your sender account to send events
+
+```
+{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Sid": "someId",
+    "Effect": "Allow",
+    "Principal": {
+      "AWS": "arn:aws:iam::[YOUR SENDER AWS ACCOUNT ID]:root"
+    },
+    "Action": "events:PutEvents",
+    "Resource": "arn:aws:events:us-east-1:[YOUR AUDITOR AWS ACCOUNT ID]:event-bus/default"
+  }]
+}
+```
+
+### Bucket Setup
+
+1. Go to the bucket you’d like to add and click on Permissions tab and then go to Bucket Policy. Add the following statement to your policy:
+
+```
+{
+	"Sid": "uniqueStmntId",
+	"Effect": "Allow",
+	"Principal": {
+		"AWS": "[ARN FOR s3auditorLambdaRole from CloudFormation Output]"
+	},
+	"Action": "s3:GetObject*",
+	"Resource": "arn:aws:s3:::[YOUR BUCKET NAME]/*"
+}
+```
+
+2. Go to the bucket you'd like to add and click on Properties tab
+3. Under Event Notifications, click Edit next to Amazon EventBridge and set it to On
+4. In the AWS Account where your S3 Auditor is set up:
+	- Go to IAM > s3auditorLambdaRole and add the following inline policy to an existing inline policy or add a new one:
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "someUniqueStmntId",
+            "Action": "s3:GetObject*",
+            "Effect": "Allow",
+            "Resource": "arn:aws:s3:::[YOUR BUCKET NAME]/*"
+        }
+    ]
+}
+```
+
+### GET Activity Logging
+
+This optional step should only be done if you would like to set up GET request logging on the bucket you set up above. This ensures GET requests are logged in the S3 Auditor on a best-effort basis (this process depends on the server access logs from S3 which are delivered on a best-effort basis as per AWS documentation).
+
+1. Create a bucket where the server access logs from the bucket above will go
+2. It is required that this bucket start with “s3auditorlog-“ in the name
+	- For example: s3auditorlog-server-access-logs-for-my-bucket
+3. In the Permissions tab of this bucket, add the following statement to your policy:
+
+```
+{
+	"Sid": "uniqueStmntId",
+	"Effect": "Allow",
+	"Principal": {
+		"AWS": "[ARN FOR s3auditorLambdaRole from CloudFormation Output]"
+	},
+	"Action": "s3:GetObject*",
+	"Resource": "arn:aws:s3:::[YOUR LOG BUCKET NAME]/*"
+}
+```
+
+4. Go to the bucket you'd like to add and click on Properties tab
+5. Under Event Notifications, click Edit next to Amazon EventBridge and set it to On
+6. In the AWS Account where your S3 Auditor is set up:
+	- Go to IAM > s3auditorLambdaRole and add the following inline policy to an existing inline policy or add a new one:
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "someUniqueStmntId",
+            "Action": "s3:GetObject*",
+            "Effect": "Allow",
+            "Resource": "arn:aws:s3:::[YOUR LOG BUCKET NAME]/*"
+        }
+    ]
+}
+```
+
+7. In the Properties tab of the bucket you managed in Bucket-Level Details above, go to Server Access Logging and click Edit
+8. Click Enable for Server Access Logging
+9. Click “Browse S3” and select the logging bucket you just created above and click “Choose Path”
+10. Then Click “Save Changes”
+
+
+## Importing Data from S3 Inventory File
+
+If you have an existing bucket you would like to add to the S3 Auditor, you can run the process below to import existing meta-data from an S3 inventory file.
+
+1. Go through the “Adding a Bucket for S3 Auditor to Track” steps above to add your bucket to the S3 Auditor
+2. Generate an S3 inventory file for the bucket
+3. On an EC2 instance that has access to the AWS account where the S3 Auditor is running, and the necessary permissions to access SQS run the following steps
+	- Open s3_inventory_file_import.py
+	- Change the region to your region (e.g. us-east-1)
+	- Change the account to your AWS account number
+	- Change inventory_filename to the name of your S3 inventory file you downloaded from S3
+	- Change queue_name to the SQS queue name created by CloudFormation (default is s3auditor-object-activity)
+	- Change log_filename if you’d like to use a different name for logging the activity from the import process
+	- Run s3_inventory_file_import.py from the command line (e.g. python s3_inventory_file_import.py)
+	- This will run until all the objects from the inventory file are added to the queue to be processed by S3 Auditor
 
-The Guidance title should be consistent with the title established first in Alchemy.
-
-**Example:** *Guidance for Product Substitutions on AWS*
-
-This title correlates exactly to the Guidance it’s linked to, including its corresponding sample code repository. 
-
-
-## Table of Content (required)
-
-List the top-level sections of the README template, along with a hyperlink to the specific section.
-
-### Required
-
-1. [Overview](#overview-required)
-    - [Cost](#cost)
-2. [Prerequisites](#prerequisites-required)
-    - [Operating System](#operating-system-required)
-3. [Deployment Steps](#deployment-steps-required)
-4. [Deployment Validation](#deployment-validation-required)
-5. [Running the Guidance](#running-the-guidance-required)
-6. [Next Steps](#next-steps-required)
-7. [Cleanup](#cleanup-required)
-
-***Optional***
-
-8. [FAQ, known issues, additional considerations, and limitations](#faq-known-issues-additional-considerations-and-limitations-optional)
-9. [Revisions](#revisions-optional)
-10. [Notices](#notices-optional)
-11. [Authors](#authors-optional)
-
-## Overview (required)
-
-1. Provide a brief overview explaining the what, why, or how of your Guidance. You can answer any one of the following to help you write this:
-
-    - **Why did you build this Guidance?**
-    - **What problem does this Guidance solve?**
-
-2. Include the architecture diagram image, as well as the steps explaining the high-level overview and flow of the architecture. 
-    - To add a screenshot, create an ‘assets/images’ folder in your repository and upload your screenshot to it. Then, using the relative file path, add it to your README. 
-
-### Cost
-
-This section is for a high-level cost estimate. Think of a likely straightforward scenario with reasonable assumptions based on the problem the Guidance is trying to solve. If applicable, provide an in-depth cost breakdown table in this section.
-
-Start this section with the following boilerplate text:
-
-_You are responsible for the cost of the AWS services used while running this Guidance. As of <month> <year>, the cost for running this Guidance with the default settings in the <Default AWS Region (Most likely will be US East (N. Virginia)) > is approximately $<n.nn> per month for processing ( <nnnnn> records )._
-
-Replace this amount with the approximate cost for running your Guidance in the default Region. This estimate should be per month and for processing/serving resonable number of requests/entities.
-
-
-## Prerequisites (required)
-
-### Operating System (required)
-
-- Talk about the base Operating System (OS) and environment that can be used to run or deploy this Guidance, such as *Mac, Linux, or Windows*. Include all installable packages or modules required for the deployment. 
-- By default, assume Amazon Linux 2/Amazon Linux 2023 AMI as the base environment. All packages that are not available by default in AMI must be listed out.  Include the specific version number of the package or module.
-
-**Example:**
-“These deployment instructions are optimized to best work on **<Amazon Linux 2 AMI>**.  Deployment in another OS may require additional steps.”
-
-- Include install commands for packages, if applicable.
-
-
-### Third-party tools (If applicable)
-
-*List any installable third-party tools required for deployment.*
-
-
-### AWS account requirements (If applicable)
-
-*List out pre-requisites required on the AWS account if applicable, this includes enabling AWS regions, requiring ACM certificate.*
-
-**Example:** “This deployment requires you have public ACM certificate available in your AWS account”
-
-**Example resources:**
-- ACM certificate 
-- DNS record
-- S3 bucket
-- VPC
-- IAM role with specific permissions
-- Enabling a Region or service etc.
-
-
-### aws cdk bootstrap (if sample code has aws-cdk)
-
-<If using aws-cdk, include steps for account bootstrap for new cdk users.>
-
-**Example blurb:** “This Guidance uses aws-cdk. If you are using aws-cdk for first time, please perform the below bootstrapping....”
-
-### Service limits  (if applicable)
-
-<Talk about any critical service limits that affect the regular functioning of the Guidance. If the Guidance requires service limit increase, include the service name, limit name and link to the service quotas page.>
-
-### Supported Regions (if applicable)
-
-<If the Guidance is built for specific AWS Regions, or if the services used in the Guidance do not support all Regions, please specify the Region this Guidance is best suited for>
-
-
-## Deployment Steps (required)
-
-Deployment steps must be numbered, comprehensive, and usable to customers at any level of AWS expertise. The steps must include the precise commands to run, and describe the action it performs.
-
-* All steps must be numbered.
-* If the step requires manual actions from the AWS console, include a screenshot if possible.
-* The steps must start with the following command to clone the repo. ```git clone xxxxxxx```
-* If applicable, provide instructions to create the Python virtual environment, and installing the packages using ```requirement.txt```.
-* If applicable, provide instructions to capture the deployed resource ARN or ID using the CLI command (recommended), or console action.
-
- 
-**Example:**
-
-1. Clone the repo using command ```git clone xxxxxxxxxx```
-2. cd to the repo folder ```cd <repo-name>```
-3. Install packages in requirements using command ```pip install requirement.txt```
-4. Edit content of **file-name** and replace **s3-bucket** with the bucket name in your account.
-5. Run this command to deploy the stack ```cdk deploy``` 
-6. Capture the domain name created by running this CLI command ```aws apigateway ............```
-
-
-
-## Deployment Validation  (required)
-
-<Provide steps to validate a successful deployment, such as terminal output, verifying that the resource is created, status of the CloudFormation template, etc.>
-
-
-**Examples:**
-
-* Open CloudFormation console and verify the status of the template with the name starting with xxxxxx.
-* If deployment is successful, you should see an active database instance with the name starting with <xxxxx> in        the RDS console.
-*  Run the following CLI command to validate the deployment: ```aws cloudformation describe xxxxxxxxxxxxx```
-
-
-
-## Running the Guidance (required)
-
-<Provide instructions to run the Guidance with the sample data or input provided, and interpret the output received.> 
-
-This section should include:
-
-* Guidance inputs
-* Commands to run
-* Expected output (provide screenshot if possible)
-* Output description
-
-
-
-## Next Steps (required)
-
-Provide suggestions and recommendations about how customers can modify the parameters and the components of the Guidance to further enhance it according to their requirements.
-
-
-## Cleanup (required)
-
-- Include detailed instructions, commands, and console actions to delete the deployed Guidance.
-- If the Guidance requires manual deletion of resources, such as the content of an S3 bucket, please specify.
-
-
-
-## FAQ, known issues, additional considerations, and limitations (optional)
-
-
-**Known issues (optional)**
-
-<If there are common known issues, or errors that can occur during the Guidance deployment, describe the issue and resolution steps here>
-
-
-**Additional considerations (if applicable)**
-
-<Include considerations the customer must know while using the Guidance, such as anti-patterns, or billing considerations.>
-
-**Examples:**
-
-- “This Guidance creates a public AWS bucket required for the use-case.”
-- “This Guidance created an Amazon SageMaker notebook that is billed per hour irrespective of usage.”
-- “This Guidance creates unauthenticated public API endpoints.”
-
-
-Provide a link to the *GitHub issues page* for users to provide feedback.
-
-
-**Example:** *“For any feedback, questions, or suggestions, please use the issues tab under this repo.”*
-
-## Revisions (optional)
-
-Document all notable changes to this project.
-
-Consider formatting this section based on Keep a Changelog, and adhering to Semantic Versioning.
-
-## Notices (optional)
-
-Include a legal disclaimer
-
-**Example:**
-*Customers are responsible for making their own independent assessment of the information in this Guidance. This Guidance: (a) is for informational purposes only, (b) represents AWS current product offerings and practices, which are subject to change without notice, and (c) does not create any commitments or assurances from AWS and its affiliates, suppliers or licensors. AWS products or services are provided “as is” without warranties, representations, or conditions of any kind, whether express or implied. AWS responsibilities and liabilities to its customers are controlled by AWS agreements, and this Guidance is not part of, nor does it modify, any agreement between AWS and its customers.*
-
-
-## Authors (optional)
-
-Name of code contributors
