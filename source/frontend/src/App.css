@@ -1,0 +1,191 @@
+.App {
+    text-align: center;
+}
+
+.App-logo {
+    height: 40vmin;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
+}
+
+.App-header {
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
+
+.App-link {
+    color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.card-hover {
+    opacity: 0.95;
+}
+.card-hover:hover {
+    opacity: 1;
+}
+.card-hover:hover .card-body {
+    background-color: #dddcdc;
+}
+.card-hover:hover .card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+.otp-field {
+    width: 38px;
+    margin-right: 10px;
+    padding-left: 12px;
+    height: 40px;
+}
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.scroll-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+}
+.scroll-container .indicator {
+    height: 100%;
+    background: #8b0000;
+}
+
+.scroll-to-top {
+    position: fixed;
+    bottom: 12px;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    background: #8b0000;
+    color: #fff;
+    z-index: 1;
+}
+.scroll-to-top .icon {
+    margin-top: 10px;
+    animation: scrollTop 0.5s alternate ease infinite;
+}
+@keyframes scrollTop {
+    from {
+        transform: translateY(2px);
+    }
+    to {
+        transform: translateY(-1px);
+    }
+}
+
+.custom-youtube-player {
+    position: fixed;
+    width: 450px;
+    height: 300px;
+    bottom: 40px;
+    right: 40px;
+    background: #000;
+}
+.custom-youtube-player .close,
+.custom-youtube-player .handle {
+    position: absolute;
+    right: 0px;
+    top: -30px;
+    width: 32px;
+    height: 32px;
+    background: #000;
+    color: #fff;
+    opacity: 1;
+    padding: 3px;
+    cursor: pointer;
+}
+.custom-youtube-player .handle {
+    right: 32px;
+    padding-top: 8px;
+    cursor: move;
+}
+.fp-container {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: #f8f8f8ad;
+}
+.fp-container .fp-loader {
+    top: 30%;
+    left: 48%;
+    z-index: 1000;
+    position: absolute;
+}
+
+.battery-outer {
+    height: 210px;
+    width: 100px;
+    border: 2px solid #222;
+    padding: 4px;
+    border-radius: 7px;
+}
+.battery-inner {
+    width: 100%;
+    margin: 2px 0;
+    background-color: #01770a;
+}
+.battery-empty .battery-inner {
+    background: #8b0000;
+}
+.battery-outer::before {
+    content: "";
+    width: 24px;
+    position: absolute;
+    top: -8px;
+    height: 8px;
+    background: #222;
+    left: 49%;
+    border-radius: 4px 4px 3px 3px;
+}
+.battery-outer .battery-charging-indicator {
+    position: absolute;
+    top: 40%;
+    left: 49.2%;
+    color: #cbd71d;
+    font-size: 40px;
+    display: none;
+}
+.battery-charging .battery-outer .battery-charging-indicator {
+    display: block;
+    animation: fadeIn 0.8s infinite alternate;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.password-toogle-icon {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    z-index: 1000;
+    cursor: pointer;
+}

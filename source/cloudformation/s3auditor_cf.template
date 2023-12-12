@@ -1,0 +1,1746 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  This template will install all the necessary components; OpenSearch, Lambda,
+  Roles, Api Gateway, etc.. for this Guidance for Enterprise Search and Audit
+  for S3 on AWS (SO2280)
+Metadata:
+  'AWS::CloudFormation::Interface':
+    ParameterGroups:
+      - Label:
+          default: Bucket Configurations
+        Parameters:
+          - StagingS3Bucket
+          - s3ExportBucket
+      - Label:
+          default: OpenSearch Configuration
+        Parameters:
+          - OpenSearchHTTPAccessIP
+  'AWS::CloudFormation::Designer':
+    d2a93ec4-60c9-4e44-92c7-d243b112fe39:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: -80
+        'y': 90
+      z: 1
+      embeds: []
+    0805e6a4-b98a-4641-9a87-36628a30d36d:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 10
+        'y': 90
+      z: 1
+      embeds: []
+    93f98861-8809-4978-99d3-b1d6c2bb8afe:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 100
+        'y': 90
+      z: 1
+      embeds: []
+    205bd555-3dec-45e7-a2d6-1fd0dd8fe0f9:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 100
+        'y': 170
+      z: 1
+      embeds: []
+    100bb5c3-e9df-4090-801e-81aef208a934:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 100
+        'y': 250
+      z: 1
+      embeds: []
+      dependson:
+        - 205bd555-3dec-45e7-a2d6-1fd0dd8fe0f9
+    ae8dbb8c-66bc-4fec-9c89-dd366f81a3da:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 480
+        'y': 70
+      z: 1
+      embeds: []
+    acca5b13-cc3f-483d-b1ae-55dc2de6d816:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 220
+        'y': 480
+      z: 1
+      embeds: []
+    cdbee48d-b19e-4f64-aa8a-af5750828672:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 220
+        'y': 300
+      z: 1
+      embeds: []
+    dfd6da5a-622b-45b6-a138-025c83e5dd41:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 480
+        'y': 150
+      z: 1
+      embeds: []
+    a3317c43-e45e-41e3-97f1-18a89e107a3f:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 570
+        'y': 150
+      z: 1
+      embeds: []
+    26f38921-2d95-42e3-9027-83f7890c31c4:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 220
+        'y': 90
+      z: 1
+      embeds: []
+    1a436bba-5327-49ef-816f-9d435c4b7ac9:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 480
+        'y': 240
+      z: 1
+      embeds: []
+    e4e7b5b3-702b-4230-a960-cad167030218:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 570
+        'y': 240
+      z: 1
+      embeds: []
+    4fd89a31-9275-4b42-8aca-5a89774e1c0d:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 480
+        'y': -10
+      z: 1
+      embeds: []
+    80a80802-5320-44b9-bcf1-97aa304b5347:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 570
+        'y': 360
+      z: 1
+      embeds: []
+    c1b37252-4100-4359-b7cd-60c130f06c32:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 480
+        'y': 360
+      z: 1
+      embeds: []
+    c9c6f385-b6e6-456c-9f27-ad057137dd82:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 660
+        'y': 150
+      z: 1
+      embeds: []
+    b2bfdbbd-138d-4715-8e55-46e7c5e388bf:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 750
+        'y': 150
+      z: 1
+      embeds: []
+    86a00e0c-247c-472d-8d48-90d62fa20dcb:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 840
+        'y': 150
+      z: 1
+      embeds: []
+    7aac1c8a-3188-42d8-91d3-2355eb924420:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 660
+        'y': 360
+      z: 1
+      embeds: []
+    2c4e32e8-1562-40dc-b557-886fcd2c6d2e:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 30
+        'y': 300
+      z: 1
+      embeds: []
+    315d404d-125a-41aa-9f42-2da53c6ba94e:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 390
+        'y': 360
+      z: 1
+      embeds: []
+    68f509e1-0cfa-489c-b05e-66c8b24c5c91:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 660
+        'y': 450
+      z: 1
+      embeds: []
+    20e6a431-c692-4e44-96e8-a103a7efcbc5:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 300
+        'y': 300
+      z: 1
+      embeds: []
+    525dba90-7130-45d5-bdb5-bba72b70a032:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 300
+        'y': 90
+      z: 1
+      embeds: []
+    d5b2b6dd-81f3-452e-b15c-fd4ca148afc4:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 300
+        'y': 480
+      z: 1
+      embeds: []
+    ffbbba4e-4bda-413b-a78e-f438d2bf760d:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 300
+        'y': 210
+      z: 1
+      embeds: []
+      isassociatedwith:
+        - 525dba90-7130-45d5-bdb5-bba72b70a032
+    8a9e3943-6e61-4207-b4c3-140d568131b2:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 230
+        'y': 210
+      z: 1
+      embeds: []
+      isassociatedwith:
+        - 525dba90-7130-45d5-bdb5-bba72b70a032
+    4eb2f089-ca00-436a-8d84-a690f1ae7e8a:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 30
+        'y': 390
+      z: 1
+      embeds: []
+    a9f4623b-be37-45e5-89b0-40bde30bbf46:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 30
+        'y': 480
+      z: 1
+      embeds: []
+    e4a7bb02-54a1-4194-afa0-3564f458afb7:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 30
+        'y': 570
+      z: 1
+      embeds: []
+      isassociatedwith:
+        - cdbee48d-b19e-4f64-aa8a-af5750828672
+    9b70b795-e9ff-4e58-8992-501d742cd0d9:
+      size:
+        width: 90
+        height: 90
+      position:
+        x: 1620
+        'y': 150
+      z: 1
+      embeds: []
+    154fd128-e5a9-4e54-b0e7-818ef11507c2:
+      size:
+        width: 90
+        height: 90
+      position:
+        x: 1050
+        'y': 270
+      z: 1
+      embeds: []
+    88310195-ace2-488c-96a1-bf3e85ec4c45:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1050
+        'y': 360
+      z: 1
+      embeds: []
+      iscontainedinside:
+        - 154fd128-e5a9-4e54-b0e7-818ef11507c2
+        - 9b70b795-e9ff-4e58-8992-501d742cd0d9
+    410e5a1f-44e3-431a-9e82-870f07635ad7:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1050
+        'y': 450
+      z: 1
+      embeds: []
+      iscontainedinside:
+        - 154fd128-e5a9-4e54-b0e7-818ef11507c2
+        - 9b70b795-e9ff-4e58-8992-501d742cd0d9
+    75d98bd8-902d-4cf3-9381-137f90e56df8:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1050
+        'y': 150
+      z: 1
+      embeds: []
+    b520c37d-8816-4da4-92b2-6ce2a0153d82:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1200
+        'y': 150
+      z: 1
+      embeds: []
+    07ebabda-4c74-48f2-8cbe-5cd3463a5b4c:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1350
+        'y': 150
+      z: 1
+      embeds: []
+      dependson:
+        - 88310195-ace2-488c-96a1-bf3e85ec4c45
+        - 410e5a1f-44e3-431a-9e82-870f07635ad7
+        - 1864bb63-09f4-417b-b630-b749311fd491
+        - afffffc7-c4a6-49f5-bc95-de5dd48b81d7
+        - 4d8bfa4e-ca6a-44c6-81ff-70531c854003
+        - cf6eefa0-2aab-4bc2-a437-73c6e8c98db6
+        - ef18c205-d63b-44a4-b34a-c7c2ebc2827f
+        - 832d2a53-d51a-401f-97d0-e5d17adf081d
+        - afef6027-7ba3-4c10-9e31-2649940b7cc3
+        - 923af1bc-fb4a-41c2-800a-805a532cba26
+    1864bb63-09f4-417b-b630-b749311fd491:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1200
+        'y': 360
+      z: 1
+      embeds: []
+      iscontainedinside:
+        - 154fd128-e5a9-4e54-b0e7-818ef11507c2
+        - 9b70b795-e9ff-4e58-8992-501d742cd0d9
+        - f7887924-8cfe-4c91-8b15-66f40be5a94b
+    f7887924-8cfe-4c91-8b15-66f40be5a94b:
+      size:
+        width: 90
+        height: 90
+      position:
+        x: 1200
+        'y': 270
+      z: 1
+      embeds: []
+    afffffc7-c4a6-49f5-bc95-de5dd48b81d7:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1200
+        'y': 450
+      z: 1
+      embeds: []
+      iscontainedinside:
+        - 154fd128-e5a9-4e54-b0e7-818ef11507c2
+        - 9b70b795-e9ff-4e58-8992-501d742cd0d9
+        - f7887924-8cfe-4c91-8b15-66f40be5a94b
+    ad31079f-59d3-4a7e-afdc-a778bc6044df:
+      size:
+        width: 90
+        height: 90
+      position:
+        x: 1350
+        'y': 270
+      z: 1
+      embeds: []
+    4d8bfa4e-ca6a-44c6-81ff-70531c854003:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1350
+        'y': 360
+      z: 1
+      embeds: []
+      iscontainedinside:
+        - ad31079f-59d3-4a7e-afdc-a778bc6044df
+        - 9b70b795-e9ff-4e58-8992-501d742cd0d9
+    cf6eefa0-2aab-4bc2-a437-73c6e8c98db6:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1350
+        'y': 450
+      z: 1
+      embeds: []
+      iscontainedinside:
+        - ad31079f-59d3-4a7e-afdc-a778bc6044df
+        - 9b70b795-e9ff-4e58-8992-501d742cd0d9
+    833fd30b-68a0-44c3-8a8b-e0136a012162:
+      size:
+        width: 90
+        height: 90
+      position:
+        x: 1470
+        'y': 270
+      z: 1
+      embeds: []
+    ef18c205-d63b-44a4-b34a-c7c2ebc2827f:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1470
+        'y': 360
+      z: 1
+      embeds: []
+      iscontainedinside:
+        - 833fd30b-68a0-44c3-8a8b-e0136a012162
+        - 9b70b795-e9ff-4e58-8992-501d742cd0d9
+    832d2a53-d51a-401f-97d0-e5d17adf081d:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1470
+        'y': 450
+      z: 1
+      embeds: []
+      iscontainedinside:
+        - 833fd30b-68a0-44c3-8a8b-e0136a012162
+        - 9b70b795-e9ff-4e58-8992-501d742cd0d9
+    a37b47c6-779d-4048-aa57-d79441246ec7:
+      size:
+        width: 90
+        height: 90
+      position:
+        x: 1620
+        'y': 270
+      z: 1
+      embeds: []
+    afef6027-7ba3-4c10-9e31-2649940b7cc3:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1620
+        'y': 360
+      z: 1
+      embeds: []
+      iscontainedinside:
+        - ad31079f-59d3-4a7e-afdc-a778bc6044df
+        - 9b70b795-e9ff-4e58-8992-501d742cd0d9
+        - a37b47c6-779d-4048-aa57-d79441246ec7
+    923af1bc-fb4a-41c2-800a-805a532cba26:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1620
+        'y': 450
+      z: 1
+      embeds: []
+      iscontainedinside:
+        - a37b47c6-779d-4048-aa57-d79441246ec7
+        - 9b70b795-e9ff-4e58-8992-501d742cd0d9
+    b4318144-e632-4d67-9fca-b876bef2046f:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 930
+        'y': 150
+      z: 1
+      embeds: []
+      dependson:
+        - 93f98861-8809-4978-99d3-b1d6c2bb8afe
+    6f304639-0e7a-40b7-82dd-07c7e78a3fdf:
+      size:
+        width: 90
+        height: 90
+      position:
+        x: -230
+        'y': 100
+      z: 1
+      embeds: []
+    47754f38-cd52-4155-8f93-ead74669adca:
+      size:
+        width: 90
+        height: 90
+      position:
+        x: -230
+        'y': 250
+      z: 1
+      embeds: []
+    97d61680-4be0-43b4-af76-a18d0d78f9d7:
+      size:
+        width: 90
+        height: 90
+      position:
+        x: -110
+        'y': 250
+      z: 1
+      embeds: []
+    20dcb344-7637-4aab-9896-c6383b784520:
+      size:
+        width: 90
+        height: 90
+      position:
+        x: -370
+        'y': 240
+      z: 1
+      embeds: []
+    bd6de19d-1ea7-4347-8a37-a3e72df2e093:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: -360
+        'y': 110
+      z: 1
+      embeds: []
+    5e014c49-fdcb-4fa5-8779-be00cd43850b:
+      source:
+        id: 6f304639-0e7a-40b7-82dd-07c7e78a3fdf
+      target:
+        id: bd6de19d-1ea7-4347-8a37-a3e72df2e093
+      z: 1
+    f4121509-029d-4668-8902-6aaeaee4a16f:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: -460
+        'y': 110
+      z: 1
+      embeds: []
+Resources:
+  OpenSearchKMSKey:
+    Type: 'AWS::KMS::Key'
+    Properties:
+      Description: Key used for OpenSearch Cluster encryption
+      Enabled: true
+      EnableKeyRotation: true
+      KeyPolicy:
+        Version: 2012-10-17
+        Id: OpenSearchKMSKey
+        Statement:
+          - Sid: Multi-region KMS key for encrypting DLM AMIs
+            Effect: Allow
+            Principal:
+              AWS: !Join 
+                - ''
+                - - 'arn:aws:iam::'
+                  - !Ref 'AWS::AccountId'
+                  - ':root'
+            Action: 'kms:*'
+            Resource: '*'
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: d2a93ec4-60c9-4e44-92c7-d243b112fe39
+  OpenSearchKmsKeyAlias:
+    Type: 'AWS::KMS::Alias'
+    Properties:
+      AliasName: alias/OpenSearchKmsKeyAlias
+      TargetKeyId: !Ref OpenSearchKMSKey
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 0805e6a4-b98a-4641-9a87-36628a30d36d
+  OpenSearchDomain:
+    Type: 'AWS::OpenSearchService::Domain'
+    Properties:
+      DomainName: aws-s3auditor-solution
+      EngineVersion: OpenSearch_2.9
+      VPCOptions:
+        SubnetIds:
+          - !Ref SubnetA
+          - !Ref SubnetB
+      ClusterConfig:
+        DedicatedMasterEnabled: true
+        DedicatedMasterCount: 3
+        DedicatedMasterType: m6g.xlarge.search
+        InstanceCount: !Ref OpenSearchInstanceNumber
+        InstanceType: !Ref OpenSearchNodeType
+        ZoneAwarenessEnabled: true
+        ZoneAwarenessConfig:
+          AvailabilityZoneCount: 2
+      EncryptionAtRestOptions:
+        Enabled: true
+        KmsKeyId: !GetAtt 
+          - OpenSearchKMSKey
+          - Arn
+      LogPublishingOptions:
+        SEARCH_SLOW_LOGS:
+          Enabled: false
+        ES_APPLICATION_LOGS:
+          Enabled: false
+        INDEX_SLOW_LOGS:
+          Enabled: false
+        AUDIT_LOGS:
+          Enabled: false
+      NodeToNodeEncryptionOptions:
+        Enabled: true
+      DomainEndpointOptions:
+        EnforceHTTPS: true
+        TLSSecurityPolicy: Policy-Min-TLS-1-2-2019-07
+      AdvancedSecurityOptions:
+        Enabled: true
+        InternalUserDatabaseEnabled: true
+        MasterUserOptions:
+          MasterUserName: >-
+            {{resolve:secretsmanager:s3auditor-opensearch-info:SecretString:username}}
+          MasterUserPassword: >-
+            {{resolve:secretsmanager:s3auditor-opensearch-info:SecretString:password}}
+      EBSOptions:
+        EBSEnabled: true
+        VolumeSize: !Ref OpenSearchEBSVolumeSize
+      AccessPolicies:
+        Version: 2012-10-17
+        Statement:
+          - Sid: addHttpAccess
+            Effect: Allow
+            Principal:
+              AWS: '*'
+            Action: 'es:ESHttp*'
+            Resource: !Sub >-
+              arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/aws-s3auditor-solution/*
+            Condition:
+              IpAddress:
+                'aws:SourceIp':
+                  - !Ref OpenSearchHTTPAccessIP
+          - Sid: grantRoleAccess
+            Effect: Allow
+            Principal:
+              AWS:
+                - !GetAtt 
+                  - s3auditorLambdaRole
+                  - Arn
+            Action: 'es:ESHttp*'
+            Resource: !Sub >-
+              arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/aws-s3auditor-solution/*
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 93f98861-8809-4978-99d3-b1d6c2bb8afe
+  s3AuditorSqsDlq:
+    Type: 'AWS::SQS::Queue'
+    Properties:
+      QueueName: s3auditor-activity-dlq
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: acca5b13-cc3f-483d-b1ae-55dc2de6d816
+  s3AuditorSqs:
+    Type: 'AWS::SQS::Queue'
+    Properties:
+      QueueName: s3auditor-object-activity
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt 
+          - s3AuditorSqsDlq
+          - Arn
+        maxReceiveCount: 5
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: cdbee48d-b19e-4f64-aa8a-af5750828672
+    DependsOn:
+      - s3AuditorSqsDlq
+  s3NavGetTreeLambdaFunction:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Runtime: python3.9
+      Handler: lambda_function.lambda_handler
+      FunctionName: s3NavGetTree
+      Code:
+        S3Bucket: !Ref StagingS3Bucket
+        S3Key: s3auditor-nav-get-tree.zip
+      Timeout: 600
+      MemorySize: 512
+      Architectures:
+        - arm64
+      Role: !GetAtt 
+        - s3auditorLambdaRole
+        - Arn
+      Layers:
+        - !Ref requestsLayer
+        - !Ref awsRequestsAuthLayer
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: dfd6da5a-622b-45b6-a138-025c83e5dd41
+  s3auditorLambdaRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: s3auditorLambdaRole
+      Path: /
+      MaxSessionDuration: 3600
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Condition: {}
+            Action:
+              - 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+        - 'arn:aws:iam::aws:policy/CloudWatchLambdaInsightsExecutionRolePolicy'
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole'
+        - 'arn:aws:iam::aws:policy/AmazonOpenSearchServiceFullAccess'
+        - 'arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess'
+        - 'arn:aws:iam::aws:policy/AmazonSQSFullAccess'
+      Policies:
+        - PolicyName: s3AuditorWriteToExportBucket
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Sid: s3AuditorWriteToExportBucketSid
+                Effect: Allow
+                Action:
+                  - 's3:PutObject'
+                Resource: !Join 
+                  - ''
+                  - - 'arn:aws:s3:::'
+                    - !Ref paramS3ExportBucket
+                    - /*
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: ae8dbb8c-66bc-4fec-9c89-dd366f81a3da
+  s3NavGetObjects:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Runtime: python3.9
+      Handler: lambda_function.lambda_handler
+      FunctionName: s3NavGetObjects
+      Code:
+        S3Bucket: !Ref StagingS3Bucket
+        S3Key: s3auditor-nav-get-objects.zip
+      Timeout: 600
+      MemorySize: 512
+      Architectures:
+        - arm64
+      Role: !GetAtt 
+        - s3auditorLambdaRole
+        - Arn
+      Layers:
+        - !Ref requestsLayer
+        - !Ref awsRequestsAuthLayer
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: a3317c43-e45e-41e3-97f1-18a89e107a3f
+  s3auditorEventBridgeRule:
+    Type: 'AWS::Events::Rule'
+    Properties:
+      Description: Event bus for processing S3 events
+      EventBusName: default
+      EventPattern:
+        source:
+          - aws.s3
+        detail-type:
+          - Object Access Tier Changed
+          - Object Created
+          - Object Deleted
+          - Object Restore Completed
+          - Object Storage Class Changed
+          - Object Tags Added
+          - Object Tags Deleted
+      Name: s3auditor-events
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt 
+            - s3AuditorSnsTopic
+            - TopicArn
+          Id: rule-target-for-sns-topic
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 26f38921-2d95-42e3-9027-83f7890c31c4
+  requestsLayer:
+    Type: 'AWS::Lambda::LayerVersion'
+    Properties:
+      CompatibleRuntimes:
+        - python3.8
+        - python3.9
+      Content:
+        S3Bucket: !Ref StagingS3Bucket
+        S3Key: requests.zip
+      Description: Python Requests
+      LayerName: s3auditor-requests
+      LicenseInfo: MIT
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 1a436bba-5327-49ef-816f-9d435c4b7ac9
+  awsRequestsAuthLayer:
+    Type: 'AWS::Lambda::LayerVersion'
+    Properties:
+      CompatibleRuntimes:
+        - python3.8
+        - python3.9
+      Content:
+        S3Bucket: !Ref StagingS3Bucket
+        S3Key: aws-requests-auth.zip
+      Description: Python Requests
+      LayerName: s3auditor-aws-requests-auth
+      LicenseInfo: MIT
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: e4e7b5b3-702b-4230-a960-cad167030218
+  paramOSDomain:
+    Type: 'AWS::SSM::Parameter'
+    Properties:
+      Name: s3auditor-opensearch-domain
+      Type: String
+      Value: !GetAtt 
+        - OpenSearchDomain
+        - DomainEndpoint
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 205bd555-3dec-45e7-a2d6-1fd0dd8fe0f9
+  paramOSRegion:
+    Type: 'AWS::SSM::Parameter'
+    Properties:
+      Name: s3auditor-opensearch-region
+      Type: String
+      Value: !Ref 'AWS::Region'
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 100bb5c3-e9df-4090-801e-81aef208a934
+    DependsOn:
+      - paramOSDomain
+  paramS3ExportBucket:
+    Type: 'AWS::SSM::Parameter'
+    Properties:
+      Name: s3auditor-export-bucket
+      Type: String
+      Value: !Ref s3ExportBucket
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 4fd89a31-9275-4b42-8aca-5a89774e1c0d
+  paramExportQueueUrl:
+    Type: 'AWS::SSM::Parameter'
+    Properties:
+      Name: s3auditor-export-queue-url
+      Type: String
+      Value: !GetAtt 
+        - s3AuditorExportQueue
+        - QueueUrl
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 80a80802-5320-44b9-bcf1-97aa304b5347
+  s3AuditorExportQueue:
+    Type: 'AWS::SQS::Queue'
+    Properties:
+      QueueName: s3auditor-exports
+      VisibilityTimeout: 600
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: c1b37252-4100-4359-b7cd-60c130f06c32
+  s3NavSearchResults:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Runtime: python3.9
+      Handler: lambda_function.lambda_handler
+      FunctionName: s3NavGetSearchResults
+      Code:
+        S3Bucket: !Ref StagingS3Bucket
+        S3Key: s3auditor-nav-search-results.zip
+      Timeout: 600
+      MemorySize: 512
+      Architectures:
+        - arm64
+      Role: !GetAtt 
+        - s3auditorLambdaRole
+        - Arn
+      Layers:
+        - !Ref requestsLayer
+        - !Ref awsRequestsAuthLayer
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: c9c6f385-b6e6-456c-9f27-ad057137dd82
+  s3NavQueueExport:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Runtime: python3.9
+      Handler: lambda_function.lambda_handler
+      FunctionName: s3NavQueueExport
+      Code:
+        S3Bucket: !Ref StagingS3Bucket
+        S3Key: s3auditor-nav-queue-export.zip
+      Timeout: 600
+      MemorySize: 512
+      Architectures:
+        - arm64
+      Role: !GetAtt 
+        - s3auditorLambdaRole
+        - Arn
+      Layers:
+        - !Ref requestsLayer
+        - !Ref awsRequestsAuthLayer
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: b2bfdbbd-138d-4715-8e55-46e7c5e388bf
+  s3NavGetObject:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Runtime: python3.9
+      Handler: lambda_function.lambda_handler
+      FunctionName: s3NavGetObject
+      Code:
+        S3Bucket: !Ref StagingS3Bucket
+        S3Key: s3auditor-nav-get-object.zip
+      Timeout: 600
+      MemorySize: 512
+      Architectures:
+        - arm64
+      Role: !GetAtt 
+        - s3auditorLambdaRole
+        - Arn
+      Layers:
+        - !Ref requestsLayer
+        - !Ref awsRequestsAuthLayer
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 86a00e0c-247c-472d-8d48-90d62fa20dcb
+  s3AuditorRunExport:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Runtime: python3.9
+      Handler: lambda_function.lambda_handler
+      FunctionName: s3AuditorRunExport
+      Code:
+        S3Bucket: !Ref StagingS3Bucket
+        S3Key: s3auditor-run-export.zip
+      Timeout: 600
+      MemorySize: 512
+      Architectures:
+        - arm64
+      Role: !GetAtt 
+        - s3auditorLambdaRole
+        - Arn
+      Layers:
+        - !Ref requestsLayer
+        - !Ref awsRequestsAuthLayer
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 7aac1c8a-3188-42d8-91d3-2355eb924420
+  s3AuditorProcessS3Queue:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Runtime: python3.9
+      Handler: lambda_function.lambda_handler
+      FunctionName: processS3Queue
+      Code:
+        S3Bucket: !Ref StagingS3Bucket
+        S3Key: s3auditor-process-s3-queue.zip
+      Timeout: 30
+      MemorySize: 2048
+      Architectures:
+        - arm64
+      Role: !GetAtt 
+        - s3auditorLambdaRole
+        - Arn
+      Layers:
+        - !Ref requestsLayer
+        - !Ref awsRequestsAuthLayer
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 2c4e32e8-1562-40dc-b557-886fcd2c6d2e
+  s3AuditorProcessLogFile:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Runtime: python3.9
+      Handler: lambda_function.lambda_handler
+      FunctionName: processS3LogFile
+      Code:
+        S3Bucket: !Ref StagingS3Bucket
+        S3Key: s3auditor-process-s3-logfile.zip
+      Timeout: 120
+      MemorySize: 512
+      Architectures:
+        - arm64
+      Role: !GetAtt 
+        - s3auditorLambdaRole
+        - Arn
+      Layers:
+        - !Ref requestsLayer
+        - !Ref awsRequestsAuthLayer
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 315d404d-125a-41aa-9f42-2da53c6ba94e
+  s3AuditorExportEventSource:
+    Type: 'AWS::Lambda::EventSourceMapping'
+    Properties:
+      BatchSize: 1
+      Enabled: true
+      EventSourceArn: !GetAtt 
+        - s3AuditorExportQueue
+        - Arn
+      FunctionName: !GetAtt 
+        - s3AuditorRunExport
+        - Arn
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 68f509e1-0cfa-489c-b05e-66c8b24c5c91
+  s3AuditorLogsProcessorQueue:
+    Type: 'AWS::SQS::Queue'
+    Properties:
+      QueueName: s3auditor-logs-processor
+      VisibilityTimeout: 120
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 20e6a431-c692-4e44-96e8-a103a7efcbc5
+  s3AuditorSnsTopic:
+    Type: 'AWS::SNS::Topic'
+    Properties:
+      TopicName: s3auditor-activity
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 525dba90-7130-45d5-bdb5-bba72b70a032
+  LESM2ALLZ:
+    Type: 'AWS::Lambda::EventSourceMapping'
+    Properties:
+      BatchSize: 5
+      Enabled: true
+      EventSourceArn: !GetAtt 
+        - s3AuditorLogsProcessorQueue
+        - Arn
+      FunctionName: !GetAtt 
+        - s3AuditorProcessLogFile
+        - Arn
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: d5b2b6dd-81f3-452e-b15c-fd4ca148afc4
+  s3AuditorSnsSubToLogsQueue:
+    Type: 'AWS::SNS::Subscription'
+    Properties:
+      Endpoint: !GetAtt 
+        - s3AuditorLogsProcessorQueue
+        - Arn
+      Protocol: sqs
+      FilterPolicyScope: MessageBody
+      FilterPolicy:
+        detail:
+          bucket:
+            name:
+              - prefix: s3auditorlog-
+      TopicArn: !GetAtt 
+        - s3AuditorSnsTopic
+        - TopicArn
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: ffbbba4e-4bda-413b-a78e-f438d2bf760d
+  s3AuditorSnsSubToObjectQueue:
+    Type: 'AWS::SNS::Subscription'
+    Properties:
+      Endpoint: !GetAtt 
+        - s3AuditorSqs
+        - Arn
+      Protocol: sqs
+      FilterPolicyScope: MessageBody
+      FilterPolicy:
+        detail:
+          bucket:
+            name:
+              - anything-but:
+                  prefix: s3auditorlog-
+      TopicArn: !GetAtt 
+        - s3AuditorSnsTopic
+        - TopicArn
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 8a9e3943-6e61-4207-b4c3-140d568131b2
+  LESM4SO1R:
+    Type: 'AWS::Lambda::EventSourceMapping'
+    Properties:
+      BatchSize: 10
+      Enabled: true
+      EventSourceArn: !GetAtt 
+        - s3AuditorSqs
+        - Arn
+      FunctionName: !GetAtt 
+        - s3AuditorProcessS3Queue
+        - Arn
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 4eb2f089-ca00-436a-8d84-a690f1ae7e8a
+  s3AuditorObjectQueuePolicy:
+    Type: 'AWS::SQS::QueuePolicy'
+    Properties:
+      PolicyDocument:
+        Version: 2008-10-17
+        Id: access_s3auditor_object_queue
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: sns.amazonaws.com
+            Action: 'sqs:SendMessage'
+            Resource: !Sub 'arn:aws:sqs:us-east-1:${AWS::AccountId}:s3auditor-object-activity'
+            Condition:
+              ArnEquals:
+                'aws:SourceArn': !Sub 'arn:aws:sns:us-east-1:${AWS::AccountId}:s3auditor-activity'
+      Queues:
+        - !Ref s3AuditorSqs
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: a9f4623b-be37-45e5-89b0-40bde30bbf46
+  SQSQPIJE5:
+    Type: 'AWS::SQS::QueuePolicy'
+    Properties:
+      PolicyDocument:
+        Version: 2008-10-17
+        Id: access_s3auditor_log_files_queue
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: sns.amazonaws.com
+            Action: 'sqs:SendMessage'
+            Resource: !Sub 'arn:aws:sqs:us-east-1:${AWS::AccountId}:s3auditor-logs-processor'
+            Condition:
+              ArnEquals:
+                'aws:SourceArn': !Sub 'arn:aws:sns:us-east-1:${AWS::AccountId}:s3auditor-activity'
+      Queues:
+        - !Ref s3AuditorLogsProcessorQueue
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: e4a7bb02-54a1-4194-afa0-3564f458afb7
+  ApiGatewayRestApi:
+    Type: 'AWS::ApiGateway::RestApi'
+    Properties:
+      Description: s3Auditor API
+      Name: s3Auditor
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 9b70b795-e9ff-4e58-8992-501d742cd0d9
+  ApiGatewayMethodAutocomplete:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        ConnectionType: INTERNET
+        Credentials: !GetAtt 
+          - s3auditorLambdaRole
+          - Arn
+        IntegrationHttpMethod: POST
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates:
+          application/json: '{"query": "$input.params(''q'')"}'
+        TimeoutInMillis: 29000
+        Type: AWS
+        Uri: !Sub >-
+          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:s3NavGetObjects/invocations
+      OperationName: autocomplete
+      ResourceId: !Ref ApiGatewayAutocompleteResource
+      RestApiId: !Ref ApiGatewayRestApi
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 88310195-ace2-488c-96a1-bf3e85ec4c45
+  AGM2T7GG:
+    Type: 'AWS::ApiGateway::Model'
+    Properties:
+      ContentType: application/json
+      RestApiId: !Ref ApiGatewayRestApi
+      Schema: {}
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 75d98bd8-902d-4cf3-9381-137f90e56df8
+  AGS2SPQF:
+    Type: 'AWS::ApiGateway::Stage'
+    Properties:
+      DeploymentId: !Ref ApiGatewayDeployment
+      Description: Production Stage for s3Auditor
+      RestApiId: !Ref ApiGatewayRestApi
+      StageName: prod
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: b520c37d-8816-4da4-92b2-6ce2a0153d82
+  ApiGatewayDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    Properties:
+      Description: Lambda API Deployment
+      RestApiId: !Ref ApiGatewayRestApi
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 07ebabda-4c74-48f2-8cbe-5cd3463a5b4c
+    DependsOn:
+      - ApiGatewayMethodAutocomplete
+      - ApiGatewayMethodAutocompleteCORS
+      - ApiGatewayMethodQueueExport
+      - ApiGatewayMethodQueueExportCORS
+      - ApiGatewayMethodSearch
+      - ApiGatewayMethodSearchCORS
+      - ApiGatewayMethodGetTree
+      - ApiGatewayMethodGetTreeCORS
+      - ApiGatewayMethodObject
+      - ApiGatewayMethodObjectCORS
+  ApiGatewayMethodQueueExport:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      HttpMethod: POST
+      Integration:
+        ConnectionType: INTERNET
+        Credentials: !GetAtt 
+          - s3auditorLambdaRole
+          - Arn
+        IntegrationHttpMethod: POST
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates:
+          application/json: '{"query": "$input.params(''q'')"}'
+        TimeoutInMillis: 29000
+        Type: AWS
+        Uri: !Sub >-
+          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:s3NavQueueExport/invocations
+      OperationName: export
+      ResourceId: !Ref ApiGatewayQueueExportResource
+      RestApiId: !Ref ApiGatewayRestApi
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 1864bb63-09f4-417b-b630-b749311fd491
+  ApiGatewayAutocompleteResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      ParentId: !GetAtt 
+        - ApiGatewayRestApi
+        - RootResourceId
+      PathPart: autocomplete
+      RestApiId: !Ref ApiGatewayRestApi
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 154fd128-e5a9-4e54-b0e7-818ef11507c2
+  ApiGatewayQueueExportResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      ParentId: !GetAtt 
+        - ApiGatewayRestApi
+        - RootResourceId
+      PathPart: export
+      RestApiId: !Ref ApiGatewayRestApi
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: f7887924-8cfe-4c91-8b15-66f40be5a94b
+  ApiGatewayMethodAutocompleteCORS:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      AuthorizationType: NONE
+      ResourceId: !Ref ApiGatewayAutocompleteResource
+      RestApiId: !Ref ApiGatewayRestApi
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+              method.response.header.Access-Control-Allow-Methods: '''GET,OPTIONS'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            ResponseTemplates:
+              application/json: ''
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        Type: MOCK
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels:
+            application/json: Empty
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: false
+            method.response.header.Access-Control-Allow-Methods: false
+            method.response.header.Access-Control-Allow-Origin: false
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 410e5a1f-44e3-431a-9e82-870f07635ad7
+  ApiGatewayMethodQueueExportCORS:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      AuthorizationType: NONE
+      ResourceId: !Ref ApiGatewayQueueExportResource
+      RestApiId: !Ref ApiGatewayRestApi
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+              method.response.header.Access-Control-Allow-Methods: '''POST,OPTIONS'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            ResponseTemplates:
+              application/json: ''
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        Type: MOCK
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels:
+            application/json: Empty
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: false
+            method.response.header.Access-Control-Allow-Methods: false
+            method.response.header.Access-Control-Allow-Origin: false
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: afffffc7-c4a6-49f5-bc95-de5dd48b81d7
+  ApiGatewaySearchResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      ParentId: !GetAtt 
+        - ApiGatewayRestApi
+        - RootResourceId
+      PathPart: search
+      RestApiId: !Ref ApiGatewayRestApi
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: ad31079f-59d3-4a7e-afdc-a778bc6044df
+  ApiGatewayMethodSearchCORS:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      AuthorizationType: NONE
+      ResourceId: !Ref ApiGatewaySearchResource
+      RestApiId: !Ref ApiGatewayRestApi
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+              method.response.header.Access-Control-Allow-Methods: '''GET,OPTIONS'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            ResponseTemplates:
+              application/json: ''
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        Type: MOCK
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels:
+            application/json: Empty
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: false
+            method.response.header.Access-Control-Allow-Methods: false
+            method.response.header.Access-Control-Allow-Origin: false
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: cf6eefa0-2aab-4bc2-a437-73c6e8c98db6
+  ApiGatewayMethodSearch:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        ConnectionType: INTERNET
+        Credentials: !GetAtt 
+          - s3auditorLambdaRole
+          - Arn
+        IntegrationHttpMethod: POST
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates:
+          application/json: |-
+            #set($allParams = $input.params())
+            {
+            "params" : {
+            #foreach($type in $allParams.keySet())
+            #set($params = $allParams.get($type))
+            "$type" : {
+            #foreach($paramName in $params.keySet())
+            "$paramName" : "$util.escapeJavaScript($params.get($paramName))"
+            #if($foreach.hasNext),#end
+            #end
+            }
+            #if($foreach.hasNext),#end
+            #end
+            }
+        TimeoutInMillis: 29000
+        Type: AWS
+        Uri: !Sub >-
+          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:s3NavGetSearchResults/invocations
+      OperationName: search
+      ResourceId: !Ref ApiGatewaySearchResource
+      RestApiId: !Ref ApiGatewayRestApi
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 4d8bfa4e-ca6a-44c6-81ff-70531c854003
+  ApiGatewayGetTreeResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      ParentId: !GetAtt 
+        - ApiGatewayRestApi
+        - RootResourceId
+      PathPart: gettree
+      RestApiId: !Ref ApiGatewayRestApi
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 833fd30b-68a0-44c3-8a8b-e0136a012162
+  ApiGatewayMethodGetTree:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        ConnectionType: INTERNET
+        Credentials: !GetAtt 
+          - s3auditorLambdaRole
+          - Arn
+        IntegrationHttpMethod: POST
+        TimeoutInMillis: 29000
+        Type: AWS
+        Uri: !Sub >-
+          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:s3NavGetTree/invocations
+      OperationName: gettree
+      ResourceId: !Ref ApiGatewayGetTreeResource
+      RestApiId: !Ref ApiGatewayRestApi
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: ef18c205-d63b-44a4-b34a-c7c2ebc2827f
+  ApiGatewayMethodGetTreeCORS:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      AuthorizationType: NONE
+      ResourceId: !Ref ApiGatewayGetTreeResource
+      RestApiId: !Ref ApiGatewayRestApi
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+              method.response.header.Access-Control-Allow-Methods: '''GET,OPTIONS'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            ResponseTemplates:
+              application/json: ''
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        Type: MOCK
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels:
+            application/json: Empty
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: false
+            method.response.header.Access-Control-Allow-Methods: false
+            method.response.header.Access-Control-Allow-Origin: false
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 832d2a53-d51a-401f-97d0-e5d17adf081d
+  ApiGatewayObjectResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      ParentId: !GetAtt 
+        - ApiGatewayRestApi
+        - RootResourceId
+      PathPart: object
+      RestApiId: !Ref ApiGatewayRestApi
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: a37b47c6-779d-4048-aa57-d79441246ec7
+  ApiGatewayMethodObject:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        ConnectionType: INTERNET
+        Credentials: !GetAtt 
+          - s3auditorLambdaRole
+          - Arn
+        IntegrationHttpMethod: POST
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates:
+          application/json: |-
+            #set($allParams = $input.params())
+            {
+            "params" : {
+            #foreach($type in $allParams.keySet())
+            #set($params = $allParams.get($type))
+            "$type" : {
+            #foreach($paramName in $params.keySet())
+            "$paramName" : "$util.escapeJavaScript($params.get($paramName))"
+            #if($foreach.hasNext),#end
+            #end
+            }
+            #if($foreach.hasNext),#end
+            #end
+            }
+        TimeoutInMillis: 29000
+        Type: AWS
+        Uri: !Sub >-
+          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:s3NavGetObject/invocations
+      OperationName: object
+      ResourceId: !Ref ApiGatewayObjectResource
+      RestApiId: !Ref ApiGatewayRestApi
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: afef6027-7ba3-4c10-9e31-2649940b7cc3
+  ApiGatewayMethodObjectCORS:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      AuthorizationType: NONE
+      ResourceId: !Ref ApiGatewayObjectResource
+      RestApiId: !Ref ApiGatewayRestApi
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+              method.response.header.Access-Control-Allow-Methods: '''GET,OPTIONS'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            ResponseTemplates:
+              application/json: ''
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        Type: MOCK
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels:
+            application/json: Empty
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: false
+            method.response.header.Access-Control-Allow-Methods: false
+            method.response.header.Access-Control-Allow-Origin: false
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 923af1bc-fb4a-41c2-800a-805a532cba26
+  s3AuditorOpensearchIndexSetup:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Runtime: python3.9
+      Handler: lambda_function.lambda_handler
+      FunctionName: s3auditor-create-os-tables-run-once
+      Code:
+        S3Bucket: !Ref StagingS3Bucket
+        S3Key: s3auditor-create-os-tables.zip
+      Timeout: 30
+      MemorySize: 128
+      Architectures:
+        - arm64
+      Role: !GetAtt 
+        - s3auditorLambdaRole
+        - Arn
+      Layers:
+        - !Ref requestsLayer
+        - !Ref awsRequestsAuthLayer
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: b4318144-e632-4d67-9fca-b876bef2046f
+    DependsOn:
+      - OpenSearchDomain
+  VPC:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: S3AuditorVPC
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 6f304639-0e7a-40b7-82dd-07c7e78a3fdf
+  SubnetA:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      AvailabilityZone: !Select 
+        - 0
+        - !GetAZs 
+          Ref: 'AWS::Region'
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.0.0/24
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 47754f38-cd52-4155-8f93-ead74669adca
+  SubnetB:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      AvailabilityZone: !Select 
+        - 1
+        - !GetAZs 
+          Ref: 'AWS::Region'
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.1.0/24
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 97d61680-4be0-43b4-af76-a18d0d78f9d7
+  RouteTable:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 20dcb344-7637-4aab-9896-c6383b784520
+  InternetGateway:
+    Type: 'AWS::EC2::InternetGateway'
+    Properties: {}
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: bd6de19d-1ea7-4347-8a37-a3e72df2e093
+  VPCGatewayAttachment:
+    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 5e014c49-fdcb-4fa5-8779-be00cd43850b
+  InternetRoute:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+      RouteTableId: !Ref RouteTable
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: f4121509-029d-4668-8902-6aaeaee4a16f
+  SubnetARouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      RouteTableId: !Ref RouteTable
+      SubnetId: !Ref SubnetA
+  SubnetBRouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      RouteTableId: !Ref RouteTable
+      SubnetId: !Ref SubnetB
+Parameters:
+  StagingS3Bucket:
+    Type: String
+    Description: Enter the S3 bucket where your lambda resources are hosted
+  s3ExportBucket:
+    Type: String
+    Description: Enter the S3 bucket where inventory-type exports will go
+  OpenSearchHTTPAccessIP:
+    Type: String
+    Description: >-
+      Enter the IP of your outbound connection so you can access your Opensearch
+      cluster, if needed
+  OpenSearchInstanceNumber:
+    Type: Number
+    Default: 2
+    Description: >-
+      Enter the number of instances to bring up, multiples of 2 only. Default is
+      2.
+  OpenSearchEBSVolumeSize:
+    Type: Number
+    Default: 50
+    Description: 'In GB, size of EBS volume per data node. Default is 50.'
+  OpenSearchNodeType:
+    Type: String
+    Default: r6g.large.search
+    AllowedValues:
+      - r6g.large.search
+      - r6g.xlarge.search
+      - r6g.2xlarge.search
+      - r6g.4xlarge.search
+      - r6g.8xlarge.search
+    Description: 'Enter t2.micro, m1.small, or m1.large. Default is r6g.large.search.'
+Outputs:
+  IamRoleArn:
+    Description: ARN for the role used to control access for this solution
+    Value: !GetAtt 
+      - s3auditorLambdaRole
+      - Arn
+  OpensearchClusterUrl:
+    Description: HTTP Accessible Opensearch Endpoint only from the IP you specified
+    Value: !Join 
+      - ''
+      - - 'https://'
+        - !GetAtt 
+          - OpenSearchDomain
+          - DomainEndpoint
+        - /_dashboards
+  RootUrl:
+    Description: Root URL of the API gateway
+    Value: !Join 
+      - ''
+      - - 'https://'
+        - !Ref ApiGatewayRestApi
+        - .execute-api.
+        - !Ref 'AWS::Region'
+        - .amazonaws.com/prod/
