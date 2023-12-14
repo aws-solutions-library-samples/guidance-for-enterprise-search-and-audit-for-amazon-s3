@@ -50,10 +50,11 @@ The only prerequisite for this solution is the proper access to run the CloudFor
 	- Press Test above and create a new test event. The name can be anything you choose
 	- Press Test again to execute the function to create the necessary OpenSearch indexes
 
-### Step 3. OpenSearch Setup
+### Step 3. Front-end Setup
 
 1. Unzip all the React code to a directory
-2. Add the API Gateway output from CloudFormation into the .env file for your React front-end
+2. Update REACT_APP_API_GATEWAY_URL with the API Gateway output from CloudFormation
+	- You will need to copy source/frontend/.env.template to source/frontend/.env
 3. Get the latest modules by running “npm install”
 4. Build the application via “npm run build”
 5. Download the React build code from the build directory and set it up as a static site in an S3 bucket or any hosting location of your choice.
