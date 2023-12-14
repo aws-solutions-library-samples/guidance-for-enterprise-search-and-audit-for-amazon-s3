@@ -52,6 +52,8 @@ The only prerequisite for this solution is the proper access to run the CloudFor
 
 ### Step 3. Front-end Setup
 
+This step is only required if you'd like to use the provided React front-end to view the information stored in OpenSearch.
+
 1. Unzip all the React code to a directory
 2. Update REACT_APP_API_GATEWAY_URL with the API Gateway output from CloudFormation
 	- You will need to copy source/frontend/.env.template to source/frontend/.env
@@ -93,7 +95,7 @@ If this is the FIRST bucket in this AWS account to get set up for the S3 auditor
 	- Add any tags you’d like
 	- Click Next and review the setup
 	- Click Finish
-	- In the S3 Auditor account, go to the default EventBridge bus and make sure your account is added as a PutEvents source
+	- In the S3 Auditor account, go to the `default` EventBridge bus and make sure your account is added as a PutEvents source
 		- Go to the EventBridge event bus you specified
 		- Edit the PutEvents permissions to allow for your sender account to send events
 
