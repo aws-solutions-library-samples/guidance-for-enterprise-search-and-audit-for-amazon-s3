@@ -59,7 +59,8 @@ This step is only required if you'd like to use the provided React front-end to 
 	- You will need to copy source/frontend/.env.template to source/frontend/.env
 3. Get the latest modules by running `npm install`
 4. Build the application via `npm run build`
-5. Download the React build code from the build directory and set it up as a static site in an S3 bucket or any hosting location of your choice.
+5. Download the React build code from the build directory and set it up as a static site in an S3 bucket or any hosting location of your choice
+	- If you want to run it locally on your machine, run `npm start`
 
 
 ## Adding a Bucket for S3 Auditor to Track
