@@ -29,10 +29,10 @@ The only prerequisite for this solution is the proper access to run the CloudFor
 3. Go to Secrets Manager in the console
 	- Click on Store a new secret
 	- Under secret type select Other type of secret
-	- Below for key/value put in **username** for the key and any username value you’d like (e.g. admin)
-	- Click Add row and put in another key/value pair with **password** as the key and whatever password you’d like for the value (must be at least 12 characters long with at least one capital, number, and symbol) 
+	- Below for key/value put in `username` for the key and any username value you’d like (e.g. admin)
+	- Click Add row and put in another key/value pair with `password` as the key and whatever password you’d like for the value (must be at least 12 characters long with at least one capital, number, and symbol) 
 	- Click Next
-	- For the secret name enter s3auditor-opensearch-info (this is required)
+	- For the secret name enter `s3auditor-opensearch-info` (this is required)
 	- Click Next, click Next again, and then click Store
 4. Run the CloudFormation template provided here to set up all the necessary resources needed for this solution. This step can take approximately 15 minutes or more.
 5. Upon success, save the Role ARN, API Gateway endpoint, and OpenSearch Dashboard URL outputs
@@ -41,11 +41,11 @@ The only prerequisite for this solution is the proper access to run the CloudFor
 
 1. Go to the OpenSearch Dashboard URL and login with the credentials you saved in Secrets Manager
 2. In the top left, click on the menu icon and go to Security
-3. Select Roles and find the all_access and security_manager roles
+3. Select Roles and find the `all_access and security_manager` roles
 	- In both of these roles, go to Mapped Users tab
 	- Click on Manage Mapping
 	- Add the ARN for the Role from the CloudFormation Outputs tab into the Backend roles and click Map
-4. In the AWS Console, navigate to Lambda Functions and click on s3auditor-create-os-tables-run-once
+4. In the AWS Console, navigate to Lambda Functions and click on `s3auditor-create-os-tables-run-once`
 	- Go to lambda_function.py so you can see the code of the function
 	- Press Test above and create a new test event. The name can be anything you choose
 	- Press Test again to execute the function to create the necessary OpenSearch indexes
@@ -55,8 +55,8 @@ The only prerequisite for this solution is the proper access to run the CloudFor
 1. Unzip all the React code to a directory
 2. Update REACT_APP_API_GATEWAY_URL with the API Gateway output from CloudFormation
 	- You will need to copy source/frontend/.env.template to source/frontend/.env
-3. Get the latest modules by running “npm install”
-4. Build the application via “npm run build”
+3. Get the latest modules by running `npm install`
+4. Build the application via `npm run build`
 5. Download the React build code from the build directory and set it up as a static site in an S3 bucket or any hosting location of your choice.
 
 
@@ -199,13 +199,12 @@ If you have an existing bucket you would like to add to the S3 Auditor, you can 
 
 1. Go through the “Adding a Bucket for S3 Auditor to Track” steps above to add your bucket to the S3 Auditor
 2. Generate an S3 inventory file for the bucket
-3. On an EC2 instance that has access to the AWS account where the S3 Auditor is running, and the necessary permissions to access SQS run the following steps
-	- Open s3_inventory_file_import.py
-	- Change the region to your region (e.g. us-east-1)
-	- Change the account to your AWS account number
-	- Change inventory_filename to the name of your S3 inventory file you downloaded from S3
-	- Change queue_name to the SQS queue name created by CloudFormation (default is s3auditor-object-activity)
-	- Change log_filename if you’d like to use a different name for logging the activity from the import process
-	- Run s3_inventory_file_import.py from the command line (e.g. python s3_inventory_file_import.py)
+3. On an EC2 instance or a local machine that has access to the AWS account where the S3 Auditor is running, and the necessary permissions to access SQS run the following steps:
+	- run s3_inventory_file_import.py `region` `account` `inventory_file_name` `queue_name` `log_filename`
+		- `region` - your region (e.g. us-east-1)
+		- `account` - your AWS account number
+		- `inventory_filename` - the name of your S3 inventory file you downloaded from S3
+		- `queue_name` - the SQS queue name created by CloudFormation (e.g. s3auditor-object-activity)
+		- `log_filename` - log filename for logging the activity from the import process
 	- This will run until all the objects from the inventory file are added to the queue to be processed by S3 Auditor
 
