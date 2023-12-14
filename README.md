@@ -29,8 +29,8 @@ The only prerequisite for this solution is the proper access to run the CloudFor
 3. Go to Secrets Manager in the console
 	- Click on Store a new secret
 	- Under secret type select Other type of secret
-	- Below for key/value put in username for the key and any username value you’d like (e.g. admin)
-	- Click Add row and put in another key/value pair with password as the key and whatever password you’d like for the value (must be at least characters long with at least one capital, number, and symbol) 
+	- Below for key/value put in **username** for the key and any username value you’d like (e.g. admin)
+	- Click Add row and put in another key/value pair with **password** as the key and whatever password you’d like for the value (must be at least 12 characters long with at least one capital, number, and symbol) 
 	- Click Next
 	- For the secret name enter s3auditor-opensearch-info (this is required)
 	- Click Next, click Next again, and then click Store
