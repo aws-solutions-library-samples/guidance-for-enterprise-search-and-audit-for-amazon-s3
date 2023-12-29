@@ -93,17 +93,11 @@ def lambda_handler(event, context):
         prefix = path.pop()
         parent = "/".join(str(x) for x in path)
 
-        # if (len(prefix) == 0):
-        #     prefix = parent
-        #     parent = ''
-
         query = {
             "size": 1,
             "query": {"bool": {"must": [{"term": {"bucket": bucket}}, {"term": {"parent": parent}}, {"term": {"prefix": prefix}}]}}
         }
         results = run_prefix_query(query)
-
-        # return results
 
         prefix_info = results['hits']['hits'][0]['_source']
 
@@ -133,7 +127,6 @@ def lambda_handler(event, context):
                 "aggs": {"total_size": {"sum": {"field": "size"}}, "total_count": {"value_count": {"field": "size"}}, "avg_size": {"avg": {"field": "size"}}},
                 "_source": "false"
             }
-            # return query
 
         else:
             query = {
@@ -180,8 +173,6 @@ def lambda_handler(event, context):
 
             db['items'].append(child)
 
-        # db.sort()
-
     return db
 
 
@@ -191,9 +182,6 @@ def run_objects_query(query):
                           data=json.dumps(query), auth=auth, timeout=20)
     obj = json.loads(result.text)
 
-    print('OS Query')
-    print(obj)
-
     return obj
 
 
@@ -202,9 +190,6 @@ def run_prefix_query(query):
     result = requests.get(url, headers=headers,
                           data=json.dumps(query), auth=auth, timeout=20)
     obj = json.loads(result.text)
-
-    # print('OS Query')
-    # print(obj)
 
     return obj
 

@@ -9,7 +9,6 @@ import requests
 from datetime import timezone
 from datetime import datetime
 import time
-# import datetime
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 
 ssm_client = boto3.client('ssm')
@@ -57,11 +56,6 @@ headers = {"Content-Type": "application/json"}
 
 def lambda_handler(event, context):
 
-    # return {
-    #     'statusCode': 200,
-    #     'body': 'hi'
-    # }
-
     for record in event['Records']:
         sns_message_body = json.loads(record['body'])
         body = json.loads(sns_message_body['Message'])
@@ -69,9 +63,6 @@ def lambda_handler(event, context):
         source_bucket = body['detail']['bucket']['name']
         key = urllib.parse.unquote_plus(
             body['detail']['object']['key'], encoding='utf-8')
-
-        # source_bucket = event['Records'][0]['s3']['bucket']['name']
-        # key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8')
 
         print('Bucket: ' + source_bucket)
         print('LOG FILE: ' + key)
@@ -136,13 +127,10 @@ def update_bucket_prefix(object_bucket, object_key, read_timestamp):
         query = {"doc_as_upsert": 'true', "doc": {
             "last_read": str(read_timestamp)}}
 
-        # print('PREFIX_IDSTRING: ' + id_string)
-
         url = 'https://' + host + '/' + \
             s3_prefix_index + '/_update/' + str(os_key)
         result = requests.post(url, headers=headers,
                                data=json.dumps(query), auth=auth, timeout=20)
-        # print(result.content)
 
         if (parent == ''):
             parent = item
@@ -155,10 +143,6 @@ def update_s3_object(object_bucket, object_key, read_timestamp):
     message_bytes = id_string.encode('ascii')
     os_key = base64.b64encode(message_bytes)
 
-    # print('object key: ' + object_key)
-    # print('object bucket: ' + object_bucket)
-    # print('key: ' + str(os_key))
-
     query = {"doc_as_upsert": 'true',
              "doc": {
                  "last_read": str(read_timestamp)
@@ -169,7 +153,6 @@ def update_s3_object(object_bucket, object_key, read_timestamp):
         s3_objects_index + '/_update/' + str(os_key)
     result = requests.post(url, headers=headers,
                            data=json.dumps(query), auth=auth, timeout=20)
-    # print(result.content)
 
     query = {
         "bucket": object_bucket,
@@ -181,8 +164,6 @@ def update_s3_object(object_bucket, object_key, read_timestamp):
         s3_activity_index + '/_doc/' + str(time.time())
     result = requests.post(url, headers=headers,
                            data=json.dumps(query), auth=auth, timeout=20)
-    # print('finished activity post')
-    # print(result.content)
 
 
 def parse_s3_log_line(line):

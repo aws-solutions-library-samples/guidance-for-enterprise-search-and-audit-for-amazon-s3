@@ -48,7 +48,4 @@ def run_query(query):
                           data=json.dumps(query), auth=auth, timeout=20)
     obj = json.loads(result.text)
 
-    # print('OS Query')
-    # print(obj)
-
     return obj

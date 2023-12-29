@@ -118,7 +118,6 @@ def lambda_handler(event, context):
     client.upload_file("/tmp/" + inventory_filename,
                        export_bucket, inventory_filename)
 
-    # print('Done')
     return
 
 
@@ -127,9 +126,6 @@ def run_objects_query(query):
     result = requests.get(url, headers=headers,
                           data=json.dumps(query), auth=auth, timeout=20)
     obj = json.loads(result.text)
-
-    # print('OS Query')
-    # print(obj)
 
     return obj
 

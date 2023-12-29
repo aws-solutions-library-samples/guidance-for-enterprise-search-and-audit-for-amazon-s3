@@ -88,9 +88,6 @@ def run_objects_query(query):
                           data=json.dumps(query), auth=auth, timeout=20)
     obj = json.loads(result.text)
 
-    # print('OS Query')
-    # print(obj)
-
     return obj
 
 
@@ -99,8 +96,5 @@ def run_activity_query(query):
     result = requests.get(url, headers=headers,
                           data=json.dumps(query), auth=auth, timeout=20)
     obj = json.loads(result.text)
-
-    # print('OS Query')
-    # print(obj)
 
     return obj

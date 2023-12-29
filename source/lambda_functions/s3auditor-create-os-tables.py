@@ -2,7 +2,6 @@ import json
 import boto3
 import requests
 import os
-#import cfnresponse
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 
 ssm_client = boto3.client('ssm')
@@ -37,7 +36,5 @@ def lambda_handler(event, context):
     s3object_index = {"settings":{"analysis": {"filter": {"autocomplete_filter": {"type": "edge_ngram","min_gram": 1,"max_gram": 20}},"analyzer": {"whitespace_lowercase": {"tokenizer": "whitespace","filter": [ "lowercase" ]},"autocomplete": { "type": "custom","tokenizer": "standard","filter": ["lowercase","autocomplete_filter"]}}}},"mappings":{ "properties":{"bucket": { "type":"text", "fielddata": True, "analyzer":"whitespace_lowercase" }, "parent": { "type":"keyword" }, "prefix": { "type":"keyword" }, "storage_class": { "type":"keyword"  }, "aws_account": { "type":"keyword" }, "region": { "type":"keyword" }, "etag": { "type":"keyword" }, "deleted": {"type":"boolean","null_value": False, }, "object_name": { "type":"text", "fielddata": True, "analyzer":"whitespace_lowercase"  }, "last_read": { "type":"date", "format": "yyyy-MM-dd HH:mm:ss", "null_value": "NULL" }, "last_write": { "type":"date", "format": "yyyy-MM-dd HH:mm:ss", "null_value": "NULL" }, "size": { "type":"long" }, "tags": {"type": "nested"},"search_field": {"type": "text","analyzer": "autocomplete", "search_analyzer": "standard" }} }}
     result = requests.put(url, headers=headers, data=json.dumps(s3object_index), auth=auth, timeout=20)
     print(result)
-    
-    #cfnresponse.send(event, context, cfnresponse.SUCCESS, {"success":True}, "invokeOpensearchIndexCreation")
     
     return True
