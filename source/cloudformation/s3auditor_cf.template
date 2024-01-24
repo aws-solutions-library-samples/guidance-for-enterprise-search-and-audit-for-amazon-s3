@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  This template sets up the Enterprise Search and Audit for S3 Solution (SO2280) and deploys the OpenSearch cluster, Lambda functions, roles and API Gateways necessary for full functionality.
+  This template sets up the Enterprise Search and Audit for S3 Solution (SO9178) and deploys the OpenSearch cluster, Lambda functions, roles and API Gateways necessary for full functionality.
 Metadata:
   'AWS::CloudFormation::Interface':
     ParameterGroups:
