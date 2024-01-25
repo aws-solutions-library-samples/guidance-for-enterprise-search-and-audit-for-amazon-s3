@@ -1,13 +1,5 @@
 ## Introduction
 
-### Recording reuse
-
-The Industry Kit Program team reports on the impact that industry kits have for the AWS field and our customers. Don't forget to record reuse for every customer you show this to.
-
-In order to do so, click the "Record project reuse" button on this kit’s BuilderSpace page and enter the SFDC opportunity ID or paste the link to your SFDC opportunity.
-
-![reuse](./assets/reuse.png)
-
 ## Support
 
 If you notice a defect, or need support with deployment or demonstrating the kit, create an Issue here: [link to issue board]
