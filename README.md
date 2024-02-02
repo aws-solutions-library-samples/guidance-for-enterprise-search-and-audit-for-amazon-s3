@@ -1,12 +1,12 @@
-## Introduction
+# Guidance for Enterprise Search and Audit for Amazon S3
 
-## Support
+## Overview
 
-If you notice a defect, or need support with deployment or demonstrating the kit, create an Issue here: [link to issue board]
+This solution was built to allow for meta-data search of S3 objects in multiple S3 buckets and AWS accounts. Additionally, this solution allows the users to collect GET request data information from S3 Access Logs to collate access information on an individual object basis. Meta-data stored about each object includes all S3 tags, created date, encryption status, storage layer, and more. All this information is searchable through the provided ReactJS interface but customers can access the information directly in the OpenSearch cluster included with this solution.
 
 ## Prerequisities
 
-The only prerequisite for this solution is the proper access to run the CloudFormation template to set up S3 Auditor Lambda, SQS, SNS, IAM Permissions, OpenSearch Cluster, API Gateway and S3 permissions
+The only prerequisite for this solution is the proper access to run the CloudFormation template to set up S3 Auditor Lambda, SQS, SNS, IAM Permissions, OpenSearch Cluster, API Gateway and S3 permissions.
 
 ## Architecture
 
@@ -202,4 +202,9 @@ If you have an existing bucket you would like to add to the S3 Auditor, you can 
 		- `queue_name` - the SQS queue name created by CloudFormation (e.g. s3auditor-object-activity)
 		- `log_filename` - log filename for logging the activity from the import process
 	- This will run until all the objects from the inventory file are added to the queue to be processed by S3 Auditor
+
+
+## Notices (optional)
+
+Customers are responsible for making their own independent assessment of the information in this Guidance. This Guidance: (a) is for informational purposes only, (b) represents AWS current product offerings and practices, which are subject to change without notice, and (c) does not create any commitments or assurances from AWS and its affiliates, suppliers or licensors. AWS products or services are provided “as is” without warranties, representations, or conditions of any kind, whether express or implied. AWS responsibilities and liabilities to its customers are controlled by AWS agreements, and this Guidance is not part of, nor does it modify, any agreement between AWS and its customers.
 
