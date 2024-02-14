@@ -207,7 +207,7 @@ Once the CloudFormation template is complete and you've gone through the bucket 
 
 ## Cleanup
 
-When you delete the CloudFormation stack for this solution, all of the components set up will be removed. Any buckets created and being audited by the system will remain untouched but their event notifications because the S3 Auditor EventBridge will have been removed so that would have to repointed. You would also manually have to delete the bucket where the Lambda function zip files are stored in your account that you referenced during the CloudFormation setup.
+When you delete the CloudFormation stack for this solution, all of the components set up will be removed. Any buckets created and being audited by the system will remain untouched but their event notifications will stop working because the S3 Auditor EventBridge will have been removed. You would also manually have to delete the bucket where the Lambda function zip files are stored in your account that you referenced during the CloudFormation setup.
 
 ## Notices (optional)
 
