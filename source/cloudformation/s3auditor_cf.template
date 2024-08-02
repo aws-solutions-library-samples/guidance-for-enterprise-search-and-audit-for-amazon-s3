@@ -1,6 +1,8 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  This template sets up the Enterprise Search and Audit for S3 Solution (SO9178) and deploys the OpenSearch cluster, Lambda functions, roles and API Gateways necessary for full functionality.
+  This template sets up the Enterprise Search and Audit for S3 Solution (SO9178)
+  and deploys the OpenSearch cluster, Lambda functions, roles and API Gateways
+  necessary for full functionality.
 Metadata:
   'AWS::CloudFormation::Interface':
     ParameterGroups:
@@ -328,9 +330,6 @@ Metadata:
         'y': 360
       z: 1
       embeds: []
-      iscontainedinside:
-        - 154fd128-e5a9-4e54-b0e7-818ef11507c2
-        - 9b70b795-e9ff-4e58-8992-501d742cd0d9
     410e5a1f-44e3-431a-9e82-870f07635ad7:
       size:
         width: 60
@@ -340,9 +339,6 @@ Metadata:
         'y': 450
       z: 1
       embeds: []
-      iscontainedinside:
-        - 154fd128-e5a9-4e54-b0e7-818ef11507c2
-        - 9b70b795-e9ff-4e58-8992-501d742cd0d9
     75d98bd8-902d-4cf3-9381-137f90e56df8:
       size:
         width: 60
@@ -392,8 +388,6 @@ Metadata:
       embeds: []
       iscontainedinside:
         - 154fd128-e5a9-4e54-b0e7-818ef11507c2
-        - 9b70b795-e9ff-4e58-8992-501d742cd0d9
-        - f7887924-8cfe-4c91-8b15-66f40be5a94b
     f7887924-8cfe-4c91-8b15-66f40be5a94b:
       size:
         width: 90
@@ -414,8 +408,6 @@ Metadata:
       embeds: []
       iscontainedinside:
         - 154fd128-e5a9-4e54-b0e7-818ef11507c2
-        - 9b70b795-e9ff-4e58-8992-501d742cd0d9
-        - f7887924-8cfe-4c91-8b15-66f40be5a94b
     ad31079f-59d3-4a7e-afdc-a778bc6044df:
       size:
         width: 90
@@ -434,9 +426,6 @@ Metadata:
         'y': 360
       z: 1
       embeds: []
-      iscontainedinside:
-        - ad31079f-59d3-4a7e-afdc-a778bc6044df
-        - 9b70b795-e9ff-4e58-8992-501d742cd0d9
     cf6eefa0-2aab-4bc2-a437-73c6e8c98db6:
       size:
         width: 60
@@ -446,9 +435,6 @@ Metadata:
         'y': 450
       z: 1
       embeds: []
-      iscontainedinside:
-        - ad31079f-59d3-4a7e-afdc-a778bc6044df
-        - 9b70b795-e9ff-4e58-8992-501d742cd0d9
     833fd30b-68a0-44c3-8a8b-e0136a012162:
       size:
         width: 90
@@ -467,9 +453,6 @@ Metadata:
         'y': 360
       z: 1
       embeds: []
-      iscontainedinside:
-        - 833fd30b-68a0-44c3-8a8b-e0136a012162
-        - 9b70b795-e9ff-4e58-8992-501d742cd0d9
     832d2a53-d51a-401f-97d0-e5d17adf081d:
       size:
         width: 60
@@ -479,9 +462,6 @@ Metadata:
         'y': 450
       z: 1
       embeds: []
-      iscontainedinside:
-        - 833fd30b-68a0-44c3-8a8b-e0136a012162
-        - 9b70b795-e9ff-4e58-8992-501d742cd0d9
     a37b47c6-779d-4048-aa57-d79441246ec7:
       size:
         width: 90
@@ -502,8 +482,6 @@ Metadata:
       embeds: []
       iscontainedinside:
         - ad31079f-59d3-4a7e-afdc-a778bc6044df
-        - 9b70b795-e9ff-4e58-8992-501d742cd0d9
-        - a37b47c6-779d-4048-aa57-d79441246ec7
     923af1bc-fb4a-41c2-800a-805a532cba26:
       size:
         width: 60
@@ -513,9 +491,6 @@ Metadata:
         'y': 450
       z: 1
       embeds: []
-      iscontainedinside:
-        - a37b47c6-779d-4048-aa57-d79441246ec7
-        - 9b70b795-e9ff-4e58-8992-501d742cd0d9
     b4318144-e632-4d67-9fca-b876bef2046f:
       size:
         width: 60
@@ -574,9 +549,9 @@ Metadata:
       embeds: []
     5e014c49-fdcb-4fa5-8779-be00cd43850b:
       source:
-        id: 6f304639-0e7a-40b7-82dd-07c7e78a3fdf
-      target:
         id: bd6de19d-1ea7-4347-8a37-a3e72df2e093
+      target:
+        id: 6f304639-0e7a-40b7-82dd-07c7e78a3fdf
       z: 1
     f4121509-029d-4668-8902-6aaeaee4a16f:
       size:
@@ -616,6 +591,8 @@ Resources:
     Properties:
       AliasName: alias/OpenSearchKmsKeyAlias
       TargetKeyId: !Ref OpenSearchKMSKey
+    DependsOn:
+      - OpenSearchKMSKey
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 0805e6a4-b98a-4641-9a87-36628a30d36d
@@ -624,10 +601,6 @@ Resources:
     Properties:
       DomainName: aws-s3auditor-solution
       EngineVersion: OpenSearch_2.9
-      VPCOptions:
-        SubnetIds:
-          - !Ref SubnetA
-          - !Ref SubnetB
       ClusterConfig:
         DedicatedMasterEnabled: true
         DedicatedMasterCount: 3
@@ -691,6 +664,8 @@ Resources:
             Action: 'es:ESHttp*'
             Resource: !Sub >-
               arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/aws-s3auditor-solution/*
+    DependsOn:
+      - OpenSearchKMSKey
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 93f98861-8809-4978-99d3-b1d6c2bb8afe
