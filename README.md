@@ -147,7 +147,7 @@ This optional step should only be done if you would like to set up GET request l
 
 1. Create a bucket where the server access logs from the bucket above will go
 2. It is required that this bucket start with “s3auditorlog-“ in the name
-   - For example: s3auditorlog-server-access-logs-for-my-bucket
+   - For example: s3auditorlog-xxxxxxxxx
 3. In the Permissions tab of this bucket, add the following statement to your policy:
 
 ```
