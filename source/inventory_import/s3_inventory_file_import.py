@@ -7,11 +7,11 @@ import datetime
 import logging
 import sys
 
-region = sys.argv[0]  # AWS REGION WHERE S3 AUDITOR IS HOSTED
-account = sys.argv[1]  # AWS ACCOUNT NUMBER WHERE S3 AUDITOR IS HOSTED
-inventory_filename = sys.argv[2]  # full_inventory.csv
-queue_name = sys.argv[3]  # s3auditor-object-activity
-log_filename = sys.argv[4]  # inventory_process.log
+region = sys.argv[1]  # AWS REGION WHERE S3 AUDITOR IS HOSTED
+account = sys.argv[2]  # AWS ACCOUNT NUMBER WHERE S3 AUDITOR IS HOSTED
+inventory_filename = sys.argv[3]  # full_inventory.csv
+queue_name = sys.argv[4]  # s3auditor-object-activity
+log_filename = sys.argv[5]  # inventory_process.log
 
 logging.basicConfig(filename=log_filename, filemode='w', level=logging.INFO)
 
